@@ -67,7 +67,6 @@ data:
 
 '''
 
-from math import pi
 # from leo_msgs.msg import WheelOdom
 # from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image
@@ -83,7 +82,7 @@ qos_profile = QoSProfile(
 )
 
 
-MY_LEO = 'leo10'
+MY_LEO = 'leo09'
 
 
 import pickle
@@ -122,11 +121,11 @@ class CameraServer(Node):
         )
 
         self.i = 0                # counter = 0
-        self.image_message = None # safety setting
+        self.image_message = None # we haven't yet received image from rover
 
 
     def camera_msg_callback(self, msg):                                       # camera/image_color message from LEO rover
-        self.image_message = msg
+        self.image_message = msg         # store image
         self.i += 1
 
 
@@ -141,7 +140,7 @@ class CameraServer(Node):
             response.message = f'\nThe picture has been saved at location: {location}\n'
         else:
             response.success = False
-            response.message = f'There is no picture received yet on topic /{MY_LEO}/camera/image_color\n'
+            response.message = f'There is no picture received yet from topic /{MY_LEO}/camera/image_color\n'
 
         return response
 

@@ -31,17 +31,17 @@ class CameraClient(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    log_client = CameraClient()
+    camera_client = CameraClient()
     while True:
-        response = log_client.send_request()
-        log_client.get_logger().info(f'''
+        response = camera_client.send_request()
+        camera_client.get_logger().info(f'''
         Result for triggering "log_client":
             Successful: {response.success}
             Message:    {response.message}''')
         if response.success:
             break
     
-    log_client.destroy_node()
+    camera_client.destroy_node()
     rclpy.shutdown()
 
 

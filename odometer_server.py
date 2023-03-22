@@ -80,18 +80,18 @@ class OdometerServer(Node):
         self.odom_state_publisher = self.create_publisher(WheelOdom, f'/{MY_LEO}/odom_state', 1)
 
         self.i = 0                # counter = 0
-        self.log_active = False   # initially we are not printing the odom_state
+        self.log_active = False   # initially the log printing is deactivated
         self.x0 = 0.0             # initially the reference values are 0
         self.y0 = 0.0
         self.yaw0 = 0.0
         self.latest_pose_x = 0    #   to be on safe side, normally this is set 
-        self.latest_pose_y = 0    #   after receiving the first wheel_odom message
+        self.latest_pose_y = 0    #      after receiving the first wheel_odom message
         self.latest_pose_yaw = 0
 
 
     
     def log_client_callback(self, request, response):                           # log client start / stop
-        self.log_active = request.data  # turn on/off omometer prints
+        self.log_active = request.data  # turn on/off odometer prints
 
         if request.data:
             self.get_logger().info('Received request: odometer logs turn On')
@@ -140,7 +140,10 @@ class OdometerServer(Node):
             self.odom_state_publisher.publish(msg)                              # publish relative pose to leoXX/odom_state
 
             if self.i % 20 == 0:                                                # print every 20th message (about 1 Hz)
-                self.get_logger().info(f'''sec: {msg.stamp.sec}   nanosec: {msg.stamp.nanosec}
+                self.get_logger().info(f'''publishing on /{MY_LEO}/odom_state
+                stamp:
+                    sec: {msg.stamp.sec}   
+                    nanosec: {msg.stamp.nanosec}
                 velocity_lin: {msg.velocity_lin}
                 velocity_ang: {msg.velocity_ang}
                 pose_x: {msg.pose_x}
