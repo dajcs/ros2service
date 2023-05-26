@@ -85,7 +85,7 @@ MY_OPTI = 'Attila'
 
 
 
-class OdometerServer(Node):
+class PoseServer(Node):
     
     def __init__(self):
         super().__init__('pose_server')
@@ -98,40 +98,38 @@ class OdometerServer(Node):
             qos_profile = qos_profile
         )
 
+        self.position = None
+
 
 
     
     def provide_pose_callback(self, request, response):                           # provide_pose_callback received
         request # placeholder
 
-        self.get_logger().info('Received request: Provide Pose')
-
-        self.x0 = self.latest_pose_x
-        self.y0 = self.latest_pose_y
-        self.yaw0 = self.latest_pose_yaw
+        self.get_logger().info('Received request: get_pose')
 
         response.success = True
         response.message = f'''
-        Latet Pose:
-        {self.pose}\n'''
+        Latest Pose:
+        {self.position}\n'''
 
         return response
 
 
 
-
-
     def pose_msg_callback(self, msg):                                       # odometer message from LEO rover
-        self.pose = msg.pose
+        self.position = msg.pose.position
+
+
 
 def main(args=None):
     rclpy.init(args=args)
 
-    odometer_server = OdometerServer()
-    rclpy.spin(odometer_server)
+    pose_server = PoseServer()
+    rclpy.spin(pose_server)
 
     # destroy the node when not used anymore
-    odometer_server.destroy_node()
+    pose_server.destroy_node()
     rclpy.shutdown()
 
 
