@@ -15,7 +15,41 @@ ros2 launch vrpn_client_ros sample.launch.py
 ros2 launch optitrack_tf optitrack_tf.launch.py
 
 # tf from world \ Attila --> leo09/base_footprint \ leo09/base_link
-ros2 run tf2_ros static_transform_publisher  0 0 -0.05  0 0 0  Attila leo09/base_footprint
+ros2 run tf2_ros static_transform_publisher  0 0 -0.05  0 0 0  Attila leo09/base_link
+
+# add image to rviz
+-> image -> /leo09/camera/image_raw
+
+# teleop
+ros2 run teleop_twist_keyboard teleop_twist_keyboard /cmd_vel:=/leo09/cmd_vel
+
+# SLAM
+.bashrc 
+export ROS_DOMAIN_ID=51
+
+# ethernet -> internet
+# usb -> mesh Network
+
+# ros2 topic list: /leo03/robot_description, joint_states
+
+# 172.19.1.122 # Leo02 RPI
+# 172.19.1.123 #       Jetson
+
+# 172.19.1.132 # Leo03 RPI
+# 172.19.1.133 #       Jetson
+
+ssh xavier@172.19.1.123 # for Leo02
+ssh xavier@172.19.1.133 # for Leo03
+psw: xavier
+
+foxy
+ros2 launch leorover_bringup leorover_mappiing_bringup.launch.py
+
+# check from lab:
+ros2 run rqt_tf_tree rqt_tf_tree
+ros2 run rqt_graph rqt_graph
+
+
 
 
 
