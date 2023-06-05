@@ -3,10 +3,16 @@ from rclpy.node import Node
 from std_srvs.srv import Trigger, SetBool
 '''
 # create new frame and set tf to parent:
-ros2 run tf2_ros static_transform_publisher   0.4 0 0   0 -0.2 0   leo09/camera_frame leo09/resource
+ros2 run tf2_ros static_transform_publisher   0.4 0 0   0 -0.2 0   leo02/camera_frame leo02/resource
+ros2 run tf2_ros static_transform_publisher   0.4 0 0   0 -0.2 0   leo03/camera_frame leo03/resource
 
 # get tf between two frames:
-ros2 run tf2_ros tf2_echo leo09/base_link leo09/resource
+ros2 run tf2_ros tf2_echo leo02/map leo02/resource
+ros2 run tf2_ros tf2_echo leo03/map leo03/resource
+
+- Translation: [4.545, -2.294, -0.064]
+ros2 run tf2_ros static_transform_publisher   4.545 -2.294 -0.064   0 0 0   leo03/map leo03/resource2
+
 
 # launch ajordan5's VRRP -> topic /Attila/pose
 ros2 launch vrpn_client_ros sample.launch.py
@@ -16,12 +22,13 @@ ros2 launch optitrack_tf optitrack_tf.launch.py
 
 # tf from world \ Attila --> leo09/base_footprint \ leo09/base_link
 ros2 run tf2_ros static_transform_publisher  0 0 -0.05  0 0 0  Attila leo09/base_link
+ros2 run tf2_ros static_transform_publisher  -0.12 0 -0.30  0 0 0  Attila leo02/base_link
 
 # add image to rviz
--> image -> /leo09/camera/image_raw
+-> image -> /leo02/camera/image_raw
 
 # teleop
-ros2 run teleop_twist_keyboard teleop_twist_keyboard /cmd_vel:=/leo09/cmd_vel
+ros2 run teleop_twist_keyboard teleop_twist_keyboard /cmd_vel:=/leo02/cmd_vel
 
 # SLAM
 .bashrc 
@@ -43,13 +50,19 @@ ssh xavier@172.19.1.133 # for Leo03
 psw: xavier
 
 foxy
-ros2 launch leorover_bringup leorover_mappiing_bringup.launch.py
+ros2 launch leorover_bringup leorover_mapping_bringup.launch.py
 
 # check from lab:
 ros2 run rqt_tf_tree rqt_tf_tree
 ros2 run rqt_graph rqt_graph
 
 
+# for SLAM disconnect Attila tf
+            /leo03/map
+            /leo03/local_grid_ground
+            /leo03/local_grid_obstacle
+\ by topic /local_grid_obstacle/PointCloud2
+           /map/Map
 
 
 
