@@ -80,7 +80,7 @@ qos_profile = QoSProfile(
 )
 
 
-MY_LEO = 'leo09'
+#MY_LEO = 'leo09'
 MY_OPTI = 'Attila'
 
 
@@ -99,6 +99,7 @@ class PoseServer(Node):
         )
 
         self.position = None
+        self.orientation = None
 
 
 
@@ -111,7 +112,10 @@ class PoseServer(Node):
         response.success = True
         response.message = f'''
         Latest Pose:
-        {self.position}\n'''
+        Position:
+        {self.position}
+        Orientation:
+        {self.orientation}\n'''
 
         return response
 
@@ -119,6 +123,7 @@ class PoseServer(Node):
 
     def pose_msg_callback(self, msg):                                       # odometer message from LEO rover
         self.position = msg.pose.position
+        self.orientation = msg.pose.orientation
 
 
 
